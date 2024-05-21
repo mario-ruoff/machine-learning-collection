@@ -30,17 +30,28 @@ def main():
 
     # Construct network
     hidden_neurons = 128
-    weights = np.random.rand(x_train.shape[1], hidden_neurons)  # 784 x 128
-    biases = np.random.rand(hidden_neurons)                     # 128
+    output_neurons = 10
+    weights_h = np.random.randn(x_train.shape[1], hidden_neurons) * 0.01  # 784 x 128
+    biases_h = np.zeros(hidden_neurons)                                   # 128
+    weights_o = np.random.randn(hidden_neurons, output_neurons) * 0.01    # 128 x 10
+    biases_o = np.zeros(output_neurons)                                   # 10
 
     # Run network
-    output = relu(np.dot(x_train[0], weights) + biases)
+    hidden_output = relu(np.dot(x_train[0], weights_h) + biases_h)
+    output = softmax(np.dot(hidden_output, weights_o) + biases_o)
 
     print("End")
+
 
 # ReLU activation function
 def relu(x):
     return np.maximum(0, x)
+
+
+# Softmax activation function
+def softmax(vector):
+    exp_vector = np.exp(vector)
+    return exp_vector / np.sum(exp_vector)
 
     
 if __name__ == '__main__':

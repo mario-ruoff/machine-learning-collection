@@ -58,13 +58,25 @@ def main():
         loss = ce_loss(output, y_train_hot[index])
 
         # Backward pass
+        d_output = output - y_train_hot[index]  # Combined derivative of softmax and ce loss
+        d_loss_weights = np.outer(hidden_output, d_output)
+        d_loss_biases = d_output
 
+        d_output_h = np.dot(weights_o, d_output) * relu_derivative(hidden_output)
+        d_loss_weights_h = np.outer(x_train[index], d_output_h)
+        d_loss_biases_h = d_output_h
+        
     print("End")
 
 
 # ReLU activation function
 def relu(vector):
     return np.maximum(0, vector)
+
+
+# Derivative function of ReLU
+def relu_derivative(x):
+    return (x > 0).astype(float)
 
 
 # Softmax activation function

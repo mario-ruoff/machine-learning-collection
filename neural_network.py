@@ -40,20 +40,24 @@ def main():
     print("Creating network...")
     hidden_neurons = 128
     output_neurons = 10
+    learning_rate = 0.1
     weights_h = np.random.randn(x_train.shape[1], hidden_neurons) * 0.01  # 784 x 128
     biases_h = np.zeros(hidden_neurons)                                   # 128
     weights_o = np.random.randn(hidden_neurons, output_neurons) * 0.01    # 128 x 10
     biases_o = np.zeros(output_neurons)                                   # 10
 
     # Run network
-    print("Running network...")
-    loss = 0
+    print("Training network...")
     for index in range(x_train.shape[0]):
-        if index != 0 and index % 1000 == 0: print(f"Run {index} of {x_train.shape[0]} done.")
+        if index != 0 and index % 1000 == 0:
+            print(f"Training {index} of {x_train.shape[0]} done.")
+
+        # Forward pass
         hidden_output = relu(np.dot(x_train[index], weights_h) + biases_h)
         output = softmax(np.dot(hidden_output, weights_o) + biases_o)
-        loss += ce_loss(output, y_train_hot[index])
-    loss /= x_train.shape[0]
+        loss = ce_loss(output, y_train_hot[index])
+
+        # Backward pass
 
     print("End")
 
@@ -72,6 +76,9 @@ def softmax(vector):
 # Cross entropy loss function
 def ce_loss(output_vector, label_vector):
     return -np.sum(label_vector * np.log(output_vector))
+
+def ce_loss_derivative(x):
+    return 1 / x
 
     
 if __name__ == '__main__':

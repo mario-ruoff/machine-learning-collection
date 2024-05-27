@@ -48,6 +48,8 @@ def main():
 
     # Run network
     print("Training network...")
+    losses = []
+    plt.ion()
     for index in range(x_train.shape[0]):
         if index != 0 and index % 1000 == 0:
             print(f"Training {index} of {x_train.shape[0]} done.")
@@ -55,19 +57,29 @@ def main():
         # Forward pass
         hidden_output = relu(np.dot(x_train[index], weights_h) + biases_h)
         output = softmax(np.dot(hidden_output, weights_o) + biases_o)
-        loss = ce_loss(output, y_train_hot[index])
+        losses.append(ce_loss(output, y_train_hot[index]))
 
         # Backward pass
         d_output = output - y_train_hot[index]  # Combined derivative of softmax and ce loss
         d_loss_weights_o = np.outer(hidden_output, d_output)
-        weights_o -= learning_rate * d_loss_weights_o
-        biases_o -= learning_rate * d_output
-
         d_output_h = np.dot(weights_o, d_output) * relu_derivative(hidden_output)
         d_loss_weights_h = np.outer(x_train[index], d_output_h)
+
+        weights_o -= learning_rate * d_loss_weights_o
+        biases_o -= learning_rate * d_output
         weights_h -= learning_rate * d_loss_weights_h
         biases_h -= learning_rate * d_output_h
+
+        # Draw loss
+        if index % 100 == 0:
+            plt.clf()
+            plt.plot(losses)
+            plt.xlabel('Iteration')
+            plt.ylabel('Loss')
+            plt.title('Training Loss')
         
+    plt.ioff()
+    plt.show()
     print("End")
 
 

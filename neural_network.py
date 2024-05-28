@@ -21,8 +21,8 @@ def load_dataset():
     print("Loading dataset...")
     mnist_dataloader = MnistDataloader()
     (x_train, y_train), (x_test, y_test) = mnist_dataloader.load_data()
-    x_train = np.array(x_train) # 60000 x 28 x 28
-    y_train = np.array(y_train) # 60000
+    x_train = np.array(x_train[:1000]) # 60000 x 28 x 28
+    y_train = np.array(y_train[:1000]) # 60000
     x_test = np.array(x_test)   # 10000 x 28 x 28
     y_test = np.array(y_test)   # 10000
 

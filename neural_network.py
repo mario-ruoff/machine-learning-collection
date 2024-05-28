@@ -25,7 +25,7 @@ def load_dataset():
     y_train = np.array(y_train[:1000]) # 60000
     x_test = np.array(x_test)   # 10000 x 28 x 28
     y_test = np.array(y_test)   # 10000
-
+    
     # Show example image
     # plt.imshow(x_train[0], cmap=plt.cm.gray)
     # plt.show()

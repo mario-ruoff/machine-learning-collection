@@ -10,6 +10,13 @@ from data_loader import MnistDataloader
 
 def main():
 
+    x_train, y_train_hot = load_dataset()
+    losses = train_network(x_train, y_train_hot)
+    return losses
+
+
+def load_dataset():
+
     # Load data
     print("Loading dataset...")
     mnist_dataloader = MnistDataloader()
@@ -36,6 +43,11 @@ def main():
     y_test_hot = np.zeros((y_test.size, 10))
     y_test_hot[np.arange(y_test.size), y_test] = 1      # 10000 x 10
 
+    return x_train, y_train_hot
+
+
+def train_network(x_train, y_train_hot):
+
     # Construct network
     print("Creating network...")
     hidden_neurons = 128
@@ -49,7 +61,6 @@ def main():
     # Run network
     print("Training network...")
     losses = []
-    plt.ion()
     for index in range(x_train.shape[0]):
         if index != 0 and index % 1000 == 0:
             print(f"Training {index} of {x_train.shape[0]} done.")
@@ -69,18 +80,9 @@ def main():
         biases_o -= learning_rate * d_output
         weights_h -= learning_rate * d_loss_weights_h
         biases_h -= learning_rate * d_output_h
-
-        # Draw loss
-        if index % 100 == 0:
-            plt.clf()
-            plt.plot(losses)
-            plt.xlabel('Iteration')
-            plt.ylabel('Loss')
-            plt.title('Training Loss')
         
-    plt.ioff()
-    plt.show()
     print("End")
+    return losses
 
 
 # ReLU activation function

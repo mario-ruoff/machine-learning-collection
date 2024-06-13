@@ -45,11 +45,13 @@ def plot_images(features, labels=None, ncols=3, nrows=3):
     plt.tight_layout()    
 
 
-def prepare_data(train_features, train_labels, test_features): 
+def prepare_data(train_features, train_labels, validation_features, validation_labels, test_features): 
     # Reshape input
     train_features = train_features.transpose(0, 3, 1, 2)
+    validation_features = validation_features.transpose(0, 3, 1, 2)
     test_features = test_features.transpose(0, 3, 1, 2)
     train_features = train_features / 255
+    validation_features = validation_features / 255
     test_features = test_features / 255
 
     # Map string labels to integers
@@ -58,15 +60,13 @@ def prepare_data(train_features, train_labels, test_features):
 
     # Convert string labels to integer labels
     train_labels_indices = [label_to_index[label] for label in train_labels]
+    validation_labels_indices = [label_to_index[label] for label in validation_labels]
     
     # Convert integer labels to a tensor
     train_labels_tensor = torch.tensor(train_labels_indices, dtype=torch.long)
-    
-    # Apply one-hot encoding
-    num_classes = len(unique_labels)
-    train_labels_one_hot = F.one_hot(train_labels_tensor, num_classes=num_classes)
+    validation_labels_tensor = torch.tensor(validation_labels_indices, dtype=torch.long)
 
-    return train_features, train_labels_one_hot, test_features
+    return train_features, train_labels_tensor, validation_features, validation_labels_tensor, test_features, label_to_index
  
 
 def save_predict(predict:np.ndarray):
@@ -79,4 +79,3 @@ def save_predict(predict:np.ndarray):
     with open('predictions.npy', 'wb') as f:
         np.save(f, predict)
     print('Saving completed')
-    
